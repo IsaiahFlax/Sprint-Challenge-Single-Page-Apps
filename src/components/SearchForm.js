@@ -1,35 +1,27 @@
-import React, { useState } from "react";
-
-function SearchForm(props) {
-  const [results, setResults] = useState();
-
-  const handleChanges = e => {
-    setResults(e.target.value);
-  };
-
-  const submitHandler = e => {
-    e.preventDefault();
-
-    const filtered = props.characters.filter(char => {
-      return char.name.toLowerCase().indexOf(results.toLowerCase()) !== -1;
-    });
-    props.search(filtered);
-    console.log(filtered);
-  };
- 
-  return (
+import React, { useState, useEffect} from 'react'
+export default function SearchForm(props) {
+ const [localSearchTerm,setLocalSearchTerm]=useState('')
+ const handleChange=(event)=>{
+     setLocalSearchTerm(event.target.value)
+    
+ }
+ console.log('props.characters',props.characters )
+    useEffect(() => {
+      
+      if(props.characters) {const results = props.characters.filter(character =>{
+        return character.name.toLowerCase().includes(localSearchTerm)
+      })
+      console.log('results', results)
+      return props.setCharactersToDisplay(results)}else{
+        props.setCharactersToDisplay(props.characters)
+      }
+    },[localSearchTerm]);
+      useEffect(() => {},[])
+      return (
     <section className="search-form">
-     <form onSubmit={submitHandler}>
-        <input
-          onChange={handleChanges}
-          type="text"
-          name="character"
-          id="character"
-          placeholder="Search"
-        ></input>
-      </form>
+     <form>
+       <input id='search' type='text' name='textField' placeHolder="search" onChange={handleChange} />
+     </form>
     </section>
   );
 }
-
-export default SearchForm; 
